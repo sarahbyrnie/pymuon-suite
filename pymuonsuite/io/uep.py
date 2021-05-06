@@ -65,6 +65,7 @@ class ReadWriteUEP(ReadWrite):
 
         calc = UEPCalculator(atoms=a,
                              chden=params.get('uep_chden', ''),
+                             elpot=params.get('uep_elpot'),
                              path=folder,
                              label=sname)
 
@@ -85,7 +86,7 @@ class UEPCalculator(object):
     """Mock 'calculator' used to store info to set up a UEP calculation"""
 
     def __init__(self, label='struct', atoms=None, index=-1, path='',
-                 chden=''):
+                 chden='', elpot=''):
 
         self.label = label
         self.atoms = atoms
@@ -98,6 +99,7 @@ class UEPCalculator(object):
 
         self.chden_path = chpath
         self.chden_seed = chseed
+        self.elpot = elpot
 
         # Fixed parameters that can be changed later
         self.geom_steps = 30
@@ -161,6 +163,7 @@ class UEPCalculator(object):
                                    pcnst['atomic mass constant'][0]),
             'chden_path': self.chden_path,
             'chden_seed': self.chden_seed,
+            'elpot': self.elpot,
             'geom_steps': self.geom_steps,
             'opt_tol': self.opt_tol,
             'opt_method': self.opt_method,

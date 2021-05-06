@@ -156,6 +156,9 @@ MuAirssSchema = Schema({
     # Charge density file for UEP
     Optional('uep_chden', default=''):
     validate_str,
+    # Electrostatic potential file for UEP
+    Optional('uep_elpot', default=''):
+    validate_str,
     # Gaussian Width factor for UEP
     Optional('uep_gw_factor', default=5.0):
     float,
@@ -317,6 +320,9 @@ UEPSchema = Schema({
     validate_str,
     # Seedname for the charge density calculation
     Optional('chden_seed', default=None):
+    validate_str,
+    # Filename for the electrostatic potential
+    Optional('elpot', default=''):
     validate_str,
     # Gaussian Width factor for ionic potential
     Optional('gw_factor', default=5.0):
