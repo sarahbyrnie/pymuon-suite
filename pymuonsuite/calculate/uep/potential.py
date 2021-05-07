@@ -45,17 +45,17 @@ def _makegrid(lattice, grid):
 
     return g_grid
 
-def _parse_castep_den(seedname, gw_fac, path):
+def _parse_castep_den(seedname, path, gw_fac):
     """Read in charge density from CASTEP .den_fmt and return it in Fourier
        space ready for use in _chdens2potential
 
     | Arguements:
     |   seedname {str}  -- The seedname of the CASTEP output files
     |                      (.den_fmt and .castep) used to load the data.
+    |   path {str}      -- Path in which the CASTEP output files can be found.
     |   gw_fac {number} -- Factor used to divide the Gaussian width used
     |                      for the ions. The final width will be the
     |                      radius of the pseudopotential divided by this.
-    |   path {str}      -- Path in which the CASTEP output files can be found.
     |
     | Raises:
     |   RuntimeError -- CASTEP pseudopotentials were not found
@@ -236,9 +236,9 @@ class ElectrostaticPotential(object):
             V[s] = np.real(np.sum(self._V_G[:, :, :, None]*ftk,
                                    axis=(0, 1, 2)))
 
-        if(program=='castep'):
+        if(self._program=='castep'):
             V *= _cK*cnst.e*1e10  # Moving to SI units
-        if(program=='crystal'):
+        if(self._program=='crystal'):
             V *= 2*np.pi
 
         return V

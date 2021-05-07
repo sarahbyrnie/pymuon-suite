@@ -18,6 +18,7 @@ from scipy import constants as cnst
 
 from pymuonsuite.schemas import UEPOptSchema, UEPPlotSchema, load_input_file
 from pymuonsuite.calculate.uep.charged import ChargeDistribution
+from pymuonsuite.calculate.uep.potential import ElectrostaticPotential
 
 from parsefmt.fmtreader import FMTError
 
@@ -42,9 +43,12 @@ Calculations started on {0}
 
 def _make_chdistr(params):
     try:
-        return ChargeDistribution(seedname=params['chden_seed'],
+        if(params['elpot'] == ''):
+            return ElectrostaticPotential.from_castep(seedname=params['chden_seed'],
                                   path=params['chden_path'],
                                   gw_fac=params['gw_factor'])
+        else:
+            return ElectrostaticPotential.from_crystal(filename=params['elpot'])
     except FileNotFoundError as e:
         raise FileNotFoundError("ERROR: {}.".format(e))
     except FMTError as e:
@@ -73,13 +77,13 @@ def geomopt(params, outf=None):
 
     # Objective functions
     def f(x):
-        return chdistr.V([x])[0][0]
+        return chdistr.V([x])[0]
 
     def fprime(x):
-        return chdistr.dV([x])[0][0]*1e-10
+        return chdistr.dV([x])[0]*1e-10
 
     def fhess(x):
-        return chdistr.d2V([x])[0][0]*1e-20
+        return chdistr.d2V([x])[0]*1e-20
 
     if outf is not None:
         outf.write('\n---------\n\n')
